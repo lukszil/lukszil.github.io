@@ -67,17 +67,18 @@
       }
       #chart { margin-top: 20px; width: 100%; min-height: 260px; border-radius: 10px; overflow: hidden; }
       #chart3 { margin-top: 20px; width: 100%; min-height: 220px; border-radius: 10px; overflow: hidden; }
-      #chart3 { margin-top: 20px; width: 100%; min-height: 220px; }
+      #chart4 { margin-top: 20px; width: 100%; min-height: 240px; border-radius: 10px; overflow: hidden; }
     </style>
   </head>
   <body>
     <main class="container">
       <section class="card" role="region" aria-label="Welcome">
-        <h1>Welcome!</h1>
-        <p>Thanks for stopping by. Your basic HTML page is up and running.</p>
-        <a class="cta" href="#" onclick="alert('Have a great day!')">Get Started</a>
+        <h1>Helló!</h1>
+        <p>Itt látható három interaktív vizualizáció.</p>
+        <a class="cta" href="#" onclick="alert('Hát itt!')">Hol?</a>
         <div id="chart"></div>
         <div id="chart3"></div>
+        <div id="chart4"></div>
         <div class="footer">Made with ❤ for the web</div>
       </section>
     </main>
@@ -149,6 +150,37 @@
         config: { view: { stroke: null }, axis: { grid: false, labelColor: '#e5e7eb', titleColor: '#e5e7eb' } }
       };
       vegaEmbed('#chart3', spec3, { actions: false });
+
+      const spec4 = {
+        $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+        description: 'Interactive cars MPG vs Horsepower with hover highlight.',
+        data: { url: 'https://vega.github.io/vega-datasets/data/cars.json' },
+        mark: { type: 'point', filled: true, size: 90, stroke: '#0f172a', strokeWidth: 0.5 },
+        params: [
+          {
+            name: 'pt',
+            select: { type: 'point', on: 'mouseover', clear: 'mouseout' }
+          }
+        ],
+        encoding: {
+          x: { field: 'Horsepower', type: 'quantitative', axis: { labelColor: '#e5e7eb', titleColor: '#e5e7eb' } },
+          y: { field: 'Miles_per_Gallon', type: 'quantitative', axis: { labelColor: '#e5e7eb', titleColor: '#e5e7eb' } },
+          color: {
+            condition: { param: 'pt', empty: false, value: '#ff6b6b' },
+            value: '#4ecdc4' 
+          },
+          tooltip: [
+            { field: 'Name', type: 'nominal' },
+            { field: 'Origin', type: 'nominal' },
+            { field: 'Horsepower', type: 'quantitative' },
+            { field: 'Miles_per_Gallon', type: 'quantitative', title: 'MPG' }
+          ],
+          opacity: { condition: { param: 'pt', empty: false, value: 1 }, value: 0.45 }
+        },
+        background: 'transparent',
+        config: { view: { stroke: null } }
+      };
+      vegaEmbed('#chart4', spec4, { actions: false });
     </script>
   </body>
 </html>
