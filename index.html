@@ -118,16 +118,33 @@
     ]
   },
   "mark": { "type": "bar", "color": "#ff6b6b", "cornerRadiusTopLeft": 10, "cornerRadiusTopRight": 10 },
+  "params": [
+    {
+      "name": "barSel",
+      "select": { "type": "point", "fields": ["a"], "on": "mouseover", "clear": "mouseout" }
+    }
+  ],
   "encoding": {
     "x": {"field": "a", "type": "nominal", "axis": {"labelAngle": 0}},
-    "y": {"field": "b", "type": "quantitative"}
+    "y": {"field": "b", "type": "quantitative"},
+    "color": {
+      "condition": { "param": "barSel", "empty": false, "value": "#ff6b6b" },
+      "value": "#4ecdc4"
+    },
+    "opacity": { "condition": { "param": "barSel", "empty": false, "value": 1 }, "value": 0.7 },
+    "tooltip": [
+      {"field": "a", "type": "nominal", "title": "Category"},
+      {"field": "b", "type": "quantitative", "title": "Value"}
+    ]
   
 },
+  "width": "container",
+  "height": 240,
   "background": "transparent",
   "config": { "view": { "stroke": null }, "axis": { "labelColor": "#e5e7eb", "titleColor": "#e5e7eb" } }
 
       }
-      vegaEmbed('#chart', spec2);
+      vegaEmbed('#chart', spec2, { actions: false });
 
       const spec3 = {
         $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
@@ -136,15 +153,28 @@
         transform: [
           { filter: 'datum.year == 2000' },
           { calculate: "datum.sex == 2 ? 'Female' : 'Male'", as: 'gender' },
-          { calculate: 'datum.sex == 2 ? -datum.people : datum.people', as: 'signed_people' }
+          { calculate: 'datum.sex == 2 ? -datum.people : datum.people', as: 'signed_people' },
+          { calculate: 'abs(datum.people)', as: 'abs_people' }
         ],
         width: 300,
         height: 200,
         mark: { type: 'bar', cornerRadiusTopLeft: 10, cornerRadiusTopRight: 10 },
+        params: [
+          {
+            name: 'hover',
+            select: { type: 'point', fields: ['gender','age'], on: 'mouseover', clear: 'mouseout' }
+          }
+        ],
         encoding: {
           y: { field: 'age', axis: null, sort: 'descending' },
           x: { aggregate: 'sum', field: 'signed_people', title: 'population', axis: { format: 's' } },
-          color: { field: 'gender', scale: { range: ['#ff6b6b', '#4ecdc4'] }, legend: { orient: 'top', title: null, labelColor: '#e5e7eb' } }
+          color: { field: 'gender', scale: { range: ['#ff6b6b', '#4ecdc4'] }, legend: { orient: 'top', title: null, labelColor: '#e5e7eb' } },
+          opacity: { condition: { param: 'hover', empty: false, value: 1 }, value: 0.7 },
+          tooltip: [
+            { field: 'gender', type: 'nominal', title: 'Gender' },
+            { field: 'age', type: 'nominal', title: 'Age' },
+            { aggregate: 'sum', field: 'people', type: 'quantitative', title: 'Population', format: 's' }
+          ]
         },
         background: 'transparent',
         config: { view: { stroke: null }, axis: { grid: false, labelColor: '#e5e7eb', titleColor: '#e5e7eb' } }
