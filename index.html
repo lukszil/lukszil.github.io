@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spotify Vizualizációk</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #ff6b6b;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .container {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      gap: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 960px;
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+      padding: 32px;
+      text-align: center;
+    }
+    h1 { margin: 0 0 12px; font-size: 2.25rem; line-height: 1.2; letter-spacing: -0.02em; }
+    p { margin: 0 0 20px; color: var(--muted); }
+    .footer { margin-top: 28px; font-size: 0.9375rem; color: var(--muted); }
+    #chart, #chart3, #chart4 { width: 100%; min-height: 260px; border-radius: 10px; overflow: hidden; margin-top: 20px; }
+    .vega-bind input, .vega-bind select { color: var(--text); background: #0f172a; border: 1px solid #374151; border-radius: 6px; padding: 4px 6px; }
+    .vg-tooltip { color: #e5e7eb; background-color: #111827; border-color: #374151; }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="card">
+      <h1>Helló!</h1>
+      <p>Itt látható három interaktív vizualizáció a zeneiparból.</p>
+
+      <div id="chart"></div>
+      <div id="chart3"></div>
+      <div id="chart4"></div>
+
+      <div class="footer">Made with ❤ for the web</div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <script>
+    // --- Chart 1: Streaming előfizetők ---
+    const spec1 = {
+      $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+      description: 'Zenei streaming platformok előfizetői.',
+      title: 'Zenei streaming előfizetők (millió fő)',
+      data: { values: [
+        {a: "Spotify", b: 239},
+        {a: "Apple Music", b: 100},
+        {a: "Amazon Music", b: 82},
+        {a: "YouTube Music", b: 100},
+        {a: "Tencent Music", b: 103},
+        {a: "Deezer", b: 9},
+        {a: "Boomplay", b: 6}
+      ]},
+      mark: { type: 'bar', color: '#ff6b6b', cornerRadiusTopLeft: 10, cornerRadiusTopRight: 10 },
+      encoding: {
+        x: { field: 'a', type: 'nominal', title: 'Platform', axis: { labelAngle: 0, labelColor: '#e5e7eb', titleColor: '#e5e7eb' } },
+        y: { field: 'b', type: 'quantitative', title: 'Előfizetők (millió)', axis: { labelColor: '#e5e7eb', titleColor: '#e5e7eb' } },
+        tooltip: [
+          { field: 'a', type: 'nominal', title: 'Platform' },
+          { field: 'b', type: 'quantitative', title: 'Előfizetők (millió)' }
+        ]
+      },
+      width: 'container',
+      height: 240,
+      background: 'transparent',
+      config: { view: { stroke: null }, axis: { labelColor: '#e5e7eb', titleColor: '#e5e7eb' }, title: { color: '#e5e7eb' } }
+    };
+    vegaEmbed('#chart', spec1, { actions: false });
+
+    // --- Chart 2: Globális bevételek ---
+    const spec2 = {
+      $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+      description: 'Globális zeneipari bevételek formátum szerint, 2023 (IFPI).',
+      title: 'Globális bevételek formátum szerint – 2023 (IFPI)',
+      data: { values: [
+        { format: 'Streaming', revenue: 67.0 },
+        { format: 'Fizikai hordozók', revenue: 17.0 },
+        { format: 'Előadói jogdíjak', revenue: 9.5 },
+        { format: 'Letöltések', revenue: 3.0 },
+        { format: 'Szinkronizáció', revenue: 3.5 }
+      ]},
+      layer: [
+        { mark: { type: 'bar', cornerRadiusTopLeft: 10, cornerRadiusTopRight: 10 } },
+        { mark: { type: 'text', align: 'left', dx: 4, color: '#e5e7eb' },
+          encoding: { text: { field: 'revenue', type: 'quantitative', format: '.1f' } } }
+      ],
+      encoding: {
+        y: { field: 'format', type: 'nominal', title: 'Formátum', axis: { labelColor: '#e5e7eb', titleColor: '#e5e7eb' } },
+        x: { field: 'revenue', type: 'quantitative', title: 'Bevétel aránya (%)', axis: { labelColor: '#e5e7eb', titleColor: '#e5e7eb' } },
+        color: { field: 'format', type: 'nominal', scale: { range: ['#ff6b6b', '#4ecdc4', '#f7b801', '#a78bfa', '#60a5fa'] }, legend: { orient: 'top', labelColor: '#e5e7eb', title: null } },
+        tooltip: [ { field: 'format', type: 'nominal', title: 'Formátum' }, { field: 'revenue', type: 'quantitative', title: 'Arány (%)' } ]
+      },
+      width: 300,
+      height: 200,
+      background: 'transparent',
+      config: { view: { stroke: null }, axis: { grid: false }, title: { color: '#e5e7eb' } }
+    };
+    vegaEmbed('#chart3', spec2, { actions: false });
+
+    // --- Chart 3: Spotify Top Streamed Songs ---
+    const spec3 = {
+  $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+  description: 'Spotify legtöbbet streamelt dalai',
+  title: 'Spotify – legtöbbet streamelt dalok (Top N)',
+  data: { url: 'kworb_top_songs.csv', format: { type: 'csv' } },
+  transform: [
+    { calculate: "toNumber(replace(datum.Streams, /,/g, ''))", as: 'streamsNum' },
+    { calculate: "datum['Cím'] + ' — ' + datum['Előadó']", as: 'label' },
+    { window: [ { op: 'row_number', as: 'rank' } ], sort: [ { field: 'streamsNum', order: 'descending' } ] },
+    { filter: 'datum.rank <= topN' }
+  ],
+  params: [
+    { name: 'topN', value: 50, bind: { input: 'range', min: 20, max: 500, step: 10, name: 'Top N' } }
+  ],
+  mark: { type: 'bar', tooltip: true, cornerRadiusTopRight: 8, cornerRadiusBottomRight: 8 },
+  encoding: {
+    x: { field: 'streamsNum', type: 'quantitative', title: 'Streamek', axis: { format: 's', labelColor: '#e5e7eb', titleColor: '#e5e7eb' } },
+    y: { field: 'label', type: 'nominal', sort: '-x', title: null, axis: { labelColor: '#e5e7eb' } },
+    color: { field: 'streamsNum', type: 'quantitative', scale: { scheme: 'plasma' }, legend: { title: 'Streamek', labelColor: '#e5e7eb', titleColor: '#e5e7eb' } },
+    tooltip: [
+      { field: 'Cím', type: 'nominal', title: 'Dal' },
+      { field: 'Előadó', type: 'nominal', title: 'Előadó' },
+      { field: 'streamsNum', type: 'quantitative', title: 'Streamek', format: ',' }
+    ]
+  },
+  width: 'container',
+  height: { step: 18 },
+  background: 'transparent',
+  config: { view: { stroke: null }, axis: { labelColor: '#e5e7eb', titleColor: '#e5e7eb' }, title: { color: '#e5e7eb' } }
+};
+vegaEmbed('#chart4', spec3, { actions: false });
+
+  </script>
+</body>
+</html>
