@@ -1,0 +1,44 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Sentiment Analysis",
+  "data": { "url": "data/scraped_trends.json" },
+  "width": "container", "height": 400, "background": "transparent",
+  "transform": [
+    { "calculate": "datum.sentiment < 0 ? 'Veszély' : 'Lehetőség'", "as": "direction" },
+    { "window": [{"op": "rank", "as": "rank"}], "sort": [{"field": "sentiment", "order": "ascending"}] }
+  ],
+  "layer": [
+    { "mark": { "type": "rule", "strokeDash": [4, 4], "stroke": "#3B0F70" }, "encoding": { "x": {"datum": 0} } },
+    {
+      "mark": {"type": "rule", "size": 2},
+      "encoding": {
+        "x": { "field": "sentiment", "type": "quantitative", "title": "Hangulat", "scale": {"domain": [-10, 10]}, "axis": {"grid": false, "labelColor": "#a395b8", "titleColor": "#FCFDBF"} },
+        "y": { "field": "label", "type": "nominal", "sort": {"field": "sentiment", "order": "ascending"}, "axis": null },
+        "color": {
+          "field": "direction",
+          "scale": {"domain": ["Veszély", "Lehetőség"], "range": ["#DE4968", "#FEC98D"]},
+          "legend": null
+        }
+      }
+    },
+    {
+      "mark": {"type": "circle", "size": 150, "opacity": 1},
+      "encoding": {
+        "x": {"field": "sentiment", "type": "quantitative"},
+        "y": { "field": "label", "type": "nominal", "sort": {"field": "sentiment", "order": "ascending"} },
+        "color": { "field": "direction", "type": "nominal" },
+        "tooltip": [{"field": "full_title"}, {"field": "sentiment"}]
+      }
+    },
+    {
+      "mark": { "type": "text", "align": "left", "baseline": "middle", "dx": 15, "fontSize": 11, "limit": 250 },
+      "encoding": {
+        "x": {"field": "sentiment", "type": "quantitative"},
+        "y": {"field": "label", "type": "nominal", "sort": {"field": "sentiment", "order": "ascending"}},
+        "text": {"field": "label"},
+        "color": {"value": "#ffffff"}
+      }
+    }
+  ],
+  "config": { "view": {"stroke": null} }
+}

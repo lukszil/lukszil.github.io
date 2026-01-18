@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adatok a Zaj Mögött: Zeneipar</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+   <style>
+    /* --- 1. EGYSÉGES "MAGMA UI" SZÍNPALETTA --- */
+    :root {
+        /* Háttérszínek - A Magma skála alja */
+        --bg-main: #05040a;       /* Majdnem fekete, nagyon mély lila */
+        --bg-card: #151020;       /* Kicsit világosabb mélylila kártyáknak */
+        --border:  #3B0F70;       /* Sötétlila keretek */
+        --input-bg: #0B0818;      /* Input mezők */
+        
+        /* Szöveg színek */
+        --text-main: #ffffff;     /* Tiszta fehér a kontraszt miatt */
+        --text-header: #FCFDBF;   /* A legvilágosabb krém szín a Címeknek! */
+        --text-muted: #a395b8;    /* Halványlila a leírásoknak */
+        
+        /* Adatszínek (Storytelling) */
+        --accent: #DE4968;        /* MAGENTA/PIROS - Fókusz / Negatív / Brand */
+        --accent-good: #FEC98D;   /* VILÁGOS NARANCS/SÁRGA - Pozitív / Növekedés (Zöld helyett!) */
+        --accent-neutral: #8C2981;/* KÖZÉPLILA - Semleges / Versenytársak */
+        
+        /* Kiegészítő színek a skáláról */
+        --color-salmon: #FD9567;
+        
+        /* Interakció */
+        --accent-hover: #FD9567;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-main);
+        background-image: radial-gradient(circle at top, #3B0F70 0%, var(--bg-main) 60%); /* Finom lila ragyogás fentről */
+        color: var(--text-main);
+        margin: 0; padding: 0;
+        line-height: 1.6;
+    }
+
+    /* --- HEADER --- */
+    header {
+        text-align: center;
+        padding: 80px 20px;
+        background: transparent;
+        border-bottom: 1px solid var(--border);
+    }
+
+    h1 { 
+        font-size: 3rem; margin: 0; font-weight: 800; letter-spacing: -1px; 
+        color: var(--text-header); /* Kiemelt krém szín */
+        text-shadow: 0 0 20px rgba(252, 253, 191, 0.2);
+    }
+    .subtitle { color: var(--accent); font-size: 1.2rem; font-weight: 600; text-transform: uppercase; margin-top: 10px; letter-spacing: 2px; }
+    
+    .profile-section {
+        max-width: 800px;
+        margin: 40px auto;
+        text-align: center;
+        padding: 20px;
+        font-style: italic;
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        border-radius: 8px;
+    }
+
+    main { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+    /* --- KÁRTYÁK --- */
+    section {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 60px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+
+    h2 { 
+        color: var(--color-salmon); /* Lazac szín az alcímeknek */
+        margin-top: 0; 
+        font-size: 1.8rem; 
+        border-bottom: 1px solid var(--border); 
+        padding-bottom: 15px; 
+        margin-bottom: 25px; 
+    }
+    
+    p { color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem; }
+
+    .chart-container { width: 100%; display: block; min-height: 400px; }
+
+    /* --- UI ELEMEK --- */
+    .comparison-wrapper { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; }
+
+    .artist-panel {
+        flex: 1; min-width: 300px; 
+        background: rgba(0,0,0,0.3);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+    }
+
+    .search-box-mini { display: flex; gap: 10px; margin-bottom: 15px; }
+
+    .search-box-mini input[type="text"] { 
+        padding: 12px; 
+        border-radius: 6px; 
+        border: 1px solid var(--border); 
+        background: var(--input-bg); 
+        color: var(--text-main); 
+        width: 100%; 
+        font-family: inherit;
+    }
+    
+    .search-box-mini input:focus {
+        outline: 2px solid var(--accent);
+        border-color: transparent;
+    }
+
+    button { 
+        padding: 10px 25px; 
+        background: var(--accent); 
+        color: #fff; 
+        border: none; 
+        border-radius: 6px; 
+        cursor: pointer; 
+        font-weight: bold; 
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        transition: all 0.2s ease;
+    }
+    button:hover { 
+        background: var(--accent-hover); 
+        color: #000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(253, 149, 103, 0.4);
+    }
+
+  #vis5 .vega-embed {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        /* Minden űrlap (így a csúszka is) menjen legelőre */
+        #vis5 form {
+            order: -1 !important;       /* Legyen az első */
+            margin-bottom: 25px !important; /* Hely a grafikon előtt */
+            padding: 15px !important;
+            background: var(--bg-card) !important; /* Biztos ami biztos */
+            border-bottom: 1px solid var(--border) !important;
+            width: 100% !important;
+        }
+    footer { 
+        text-align: center; padding: 50px; color: var(--text-muted); 
+        border-top: 1px solid var(--border); margin-top: 50px; font-size: 0.9rem; 
+    }
+</style>
+</head>
+<body>
+
+    <header>
+        <div class="subtitle">BI Projekt</div>
+        <h1>Adatok a Zaj Mögött</h1>
+    </header>
+
+    <div class="profile-section">
+        <p>
+           Szia, én <strong>Lukács Szilárd </strong>vagyok. Ebben a projektben azt vizsgálom, hogyan alakította át a technológia a zeneipart. 
+            Python scripteket, API kapcsolatokat és interaktív vizualizációkat használtam, hogy feltárjam a számok mögötti valóságot.
+        </p>
+    </div>
+
+    <main>
+        <section>
+            <h2>1. A fizikai lemezek kora lejárt.</h2>
+            <div id="vis1" class="chart-container"></div>
+        </section>
+
+        <section>
+            <h2>2. A piac nem demokratikus.</h2>
+            <div id="vis2" class="chart-container" style="min-height: 300px;"></div>
+        </section>
+
+        <section>
+            <h2>3. Mennyit ér a művészet?</h2>
+        
+            <div id="vis3" class="chart-container"></div>
+        </section>
+
+        <section>
+        <h2>4. A figyelmünk változása és a dalhosszak</h2>
+        
+            <div class="comparison-wrapper">
+                <div class="artist-panel">
+                    <div class="search-box-mini">
+                        <input type="text" id="artistInputLeft" value="Metallica" placeholder="Előadó 1...">
+                        <button onclick="loadSide('left')">Frissít</button>
+                    </div>
+                    <div id="vis4-left" class="chart-container" style="height: 350px; min-height: 350px;"></div>
+                </div>
+        
+                <div class="artist-panel">
+                    <div class="search-box-mini">
+                        <input type="text" id="artistInputRight" value="Playboi Carti" placeholder="Előadó 2...">
+                        <button onclick="loadSide('right')">Frissít</button>
+                    </div>
+                    <div id="vis4-right" class="chart-container" style="height: 350px; min-height: 350px;"></div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>5. A Spotify uralkodói<i></i></h2>
+            <p>
+            </p>
+            <div id="vis5" class="chart-container"></div>
+        </section>
+
+        <section>
+            <h2>6. Iparági Pulzus (Sentiment Analysis)</h2>
+            <p>
+                Forrás: Music Business Worldwide RSS (Live Scrape)
+            </p>
+            <div id="vis6" class="chart-container" style="min-height: 400px;"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Technológiák: Python, JavaScript, Vega-Lite, HTML5/CSS3</p>
+        <p style="color: wheat;">Lukács Szilárd
+        </p>
+    
+    </footer>
+
+    <script>
+        // --- GLOBÁLIS KONFIGURÁCIÓ (A "Midnight Data" Paletta érvényesítése) ---
+     // --- GLOBÁLIS KONFIGURÁCIÓ (Magma Palette) ---
+        const commonConfig = {
+            background: "transparent",
+            view: { stroke: null },
+            font: "Segoe UI, sans-serif",
+            
+            // Tengelyek (Lila árnyalatok)
+            axis: {
+                domainColor: "#3B0F70",
+                gridColor: "#3B0F70",
+                gridOpacity: 0.3,
+                tickColor: "#3B0F70",
+                labelColor: "#a395b8",
+                titleColor: "#FCFDBF", // Címek fehérek/krémek
+                labelFont: "Segoe UI, sans-serif",
+                titleFont: "Segoe UI, sans-serif"
+            },
+            legend: {
+                labelColor: "#a395b8",
+                titleColor: "#FCFDBF",
+                labelFont: "Segoe UI, sans-serif"
+            },
+            title: {
+                color: "#FCFDBF",
+                font: "Segoe UI, sans-serif",
+                fontSize: 18,
+                anchor: "start"
+            },
+            // ALAPÉRTELMEZETT SZÍNSORREND (Magma diszkrét színek)
+            range: {
+                // 1. Magenta, 2. Narancs, 3. Krém, 4. Lila, 5. Sötétlila
+                category: ["#DE4968", "#FD9567", "#FEC98D", "#8C2981", "#3B0F70"],
+                ordinal:  ["#DE4968", "#FD9567", "#FEC98D", "#8C2981", "#3B0F70"],
+                ramp:     ["#3B0F70", "#DE4968", "#FEC98D"] 
+            }
+        };
+
+        // Opciók egyesítése
+        const embedOpt = { 
+            actions: false, 
+            theme: 'dark', 
+            config: commonConfig 
+        };
+
+        // Statikus diagramok betöltése
+        vegaEmbed('#vis1', 'charts/second.json', embedOpt);
+        vegaEmbed('#vis2', 'charts/first.json', embedOpt);
+        vegaEmbed('#vis3', 'charts/payouts.json', embedOpt);
+       vegaEmbed('#vis5', 'charts/third.json', embedOpt).then(function(result) {
+            // 1. Megkeressük a Vega konténerét
+            const container = document.querySelector('#vis5');
+            const viewContainer = container.querySelector('.vega-embed') || container;
+            
+            // 2. Megkeressük a vezérlőket (Slider) - A hivatalos osztálya: .vega-bindings
+            const controls = viewContainer.querySelector('.vega-bindings');
+
+            // 3. Ha megvan, átmozgatjuk a tetejére
+            if (controls) {
+                viewContainer.prepend(controls);
+                
+                // 4. Stílus hozzáadása közvetlenül, hogy szép legyen
+                controls.style.marginBottom = "25px";
+                controls.style.padding = "15px";
+                controls.style.background = "#151020"; // Kártya háttérszín
+                controls.style.border = "1px solid #3B0F70"; // Keret szín
+                controls.style.borderRadius = "8px";
+                controls.style.display = "flex";
+                controls.style.alignItems = "center";
+                controls.style.width = "100%";
+                controls.style.boxSizing = "border-box";
+            }
+        }).catch(console.warn);
+        vegaEmbed('#vis6', 'charts/trend_bar.json', embedOpt).catch(console.warn);
+
+        // --- 4. ÁBRA: ITUNES API LOGIKA (Kétoldalas) ---
+
+        // JSONP segédfüggvény (CORS megkerülésére)
+        function jsonpFetch(url, callbackName) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    resolve(data);
+                };
+                script.src = `${url}&callback=${callbackName}`;
+                script.onerror = () => {
+                    document.body.removeChild(script);
+                    reject(new Error("JSONP hiba"));
+                };
+                document.body.appendChild(script);
+            });
+        }
+
+        // iTunes Diagram Specifikáció
+        const itunesSpec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "data": { "name": "myData" },
+            "width": "container",
+            "height": 280,
+            "layer": [
+                {
+                    "mark": {"type": "circle", "opacity": 0.6, "size": 60},
+                    "encoding": {
+                        "x": {
+                            "field": "year", "type": "ordinal", 
+                            "title": null, 
+                            "axis": {"labelAngle": 0, "tickCount": 5} 
+                        },
+                        "y": {
+                            "field": "minutes", "type": "quantitative",
+                            "title": "Perc",
+                            // FONTOS: Rögzített skála a pontos összehasonlításhoz
+                            "scale": {"domain": [0, 8], "clamp": true}, 
+                            "axis": {"grid": true}
+                        },
+                        "color": {
+                            "field": "explicitness", "type": "nominal",
+                            // Itt is a paletta színeit használjuk
+                            "scale": {
+                                "domain": ["explicit", "cleaned", "notExplicit"], 
+                                "range": ["#ff6b6b", "#4ade80", "#60a5fa"] 
+                            },
+                            "legend": null 
+                        },
+                        "tooltip": [
+                            {"field": "title", "title": "Cím"},
+                            {"field": "minutes", "title": "Hossz", "format": ".2f"},
+                            {"field": "year", "title": "Év"}
+                        ]
+                    }
+                },
+                {
+                    // Átlagvonal
+                    "mark": {"type": "line", "point": false, "color": "#f0f6fc", "strokeWidth": 2, "strokeDash": [4,4]},
+                    "encoding": {
+                        "x": {"field": "year", "type": "ordinal"},
+                        "y": {"aggregate": "mean", "field": "minutes"}
+                    }
+                }
+            ],
+            "config": {"view": {"stroke": null}, "background": "transparent"}
+        };
+
+        // Adatbetöltő függvény
+        function loadSide(side) {
+            const inputId = side === 'left' ? 'artistInputLeft' : 'artistInputRight';
+            const containerId = side === 'left' ? 'vis4-left' : 'vis4-right';
+            
+            const container = document.getElementById(containerId);
+            const rawInput = document.getElementById(inputId).value;
+            const searchTerm = rawInput.toLowerCase().trim();
+
+            container.innerHTML = '<p style="text-align:center; color:#8b949e; padding-top:50px; font-style:italic;">Adatok betöltése...</p>';
+
+            const callbackName = 'itunes_cb_' + side + '_' + Math.round(Math.random() * 100000);
+            const url = `https://itunes.apple.com/search?term=${encodeURIComponent(rawInput)}&entity=song&limit=150`;
+
+            jsonpFetch(url, callbackName)
+                .then(apiData => {
+                    if (!apiData.results || apiData.resultCount === 0) {
+                        container.innerHTML = '<p style="text-align:center; color:#fbbf24; padding-top:50px;">Nincs találat.</p>';
+                        return;
+                    }
+
+                    const cleanData = apiData.results
+                        .map(item => ({
+                            title: item.trackName,
+                            artist: item.artistName,
+                            explicitness: item.trackExplicitness || "notExplicit",
+                            year: item.releaseDate ? new Date(item.releaseDate).getFullYear() : null,
+                            minutes: item.trackTimeMillis ? item.trackTimeMillis / 60000 : 0
+                        }))
+                        .filter(d => {
+                            if (!d.year || !d.minutes) return false;
+                            if (d.year < 1960 || d.year > 2026) return false; 
+                            const artistLower = d.artist.toLowerCase();
+                            const titleLower = d.title.toLowerCase();
+                            
+                            // Zajszűrés: csak a keresett előadó
+                            if (!artistLower.includes(searchTerm)) return false;
+                            
+                            // Feketelista
+                            const blackList = ["cover", "tribute", "karaoke", "remix", "live", "concert"];
+                            if (blackList.some(w => titleLower.includes(w))) return false;
+                            
+                            return true;
+                        });
+
+                    if (cleanData.length === 0) {
+                        container.innerHTML = '<p style="text-align:center; color:#fbbf24; padding-top:50px;">Túl sok szűrt adat.</p>';
+                        return;
+                    }
+
+                    const specWithData = JSON.parse(JSON.stringify(itunesSpec));
+                    specWithData.data = { values: cleanData };
+                    
+                    container.innerHTML = "";
+                    vegaEmbed('#' + containerId, specWithData, embedOpt);
+                })
+                .catch(error => {
+                    console.error(error);
+                    container.innerHTML = `<p style="text-align:center; color:#ff6b6b; padding-top:50px;">Hiba történt.</p>`;
+                });
+        }
+
+        // Indítás
+        loadSide('left');
+        loadSide('right');
+    </script>
+</body>
+</html>

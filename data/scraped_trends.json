@@ -1,0 +1,82 @@
+[
+    {
+        "label": "Country Music Association CEO Sarah Trahern to ret...",
+        "full_title": "Country Music Association CEO Sarah Trahern to retire at end of 2026",
+        "category": "Egyéb Hír",
+        "sentiment": -0.69,
+        "url": "https://www.musicbusinessworldwide.com/country-music-association-ceo-sarah-trahern-to-retire-at-end-of-2026/",
+        "jitter": 0.6368580635616526
+    },
+    {
+        "label": "From GMR’s new CEO to 253m tracks on streaming pla...",
+        "full_title": "From GMR’s new CEO to 253m tracks on streaming platforms… it’s MBW’s weekly round-up",
+        "category": "Üzletkötés",
+        "sentiment": 1.36,
+        "url": "https://www.musicbusinessworldwide.com/from-gmrs-new-ceo-jeff-toig-to-quarter-of-a-billion-tracks-on-streaming-services-its-mbws-weekly-round-up/",
+        "jitter": 0.158013131933043
+    },
+    {
+        "label": "Jeff Toig named CEO at Irving Azoff’s GMR, as co-f...",
+        "full_title": "Jeff Toig named CEO at Irving Azoff’s GMR, as co-founder Randy Grimmett becomes Executive Chairman",
+        "category": "Egyéb Hír",
+        "sentiment": -1.0,
+        "url": "https://www.musicbusinessworldwide.com/jeff-toig-named-ceo-at-irving-azoffs-gmr-as-co-founder-randy-grimmett-becomes-executive-chairman/",
+        "jitter": 0.18701550667296063
+    },
+    {
+        "label": "SESAC names Chris Sheehan as VP, International",
+        "full_title": "SESAC names Chris Sheehan as VP, International",
+        "category": "Egyéb Hír",
+        "sentiment": -1.4,
+        "url": "https://www.musicbusinessworldwide.com/sesac-names-chris-sheehan-as-vp-international/",
+        "jitter": 0.055617064942753425
+    },
+    {
+        "label": "Australia’s recorded music royalty rates for radio...",
+        "full_title": "Australia’s recorded music royalty rates for radio play to rise by 38% after tribunal ruling",
+        "category": "Egyéb Hír",
+        "sentiment": -1.29,
+        "url": "https://www.musicbusinessworldwide.com/australias-recorded-music-royalty-rates-for-radio-play-to-rise-by-37-5-after-tribunal-ruling/",
+        "jitter": 0.7472606117009329
+    },
+    {
+        "label": "Kobalt strikes global publishing partnership with ...",
+        "full_title": "Kobalt strikes global publishing partnership with India’s Madverse Music",
+        "category": "Üzletkötés",
+        "sentiment": 2.0,
+        "url": "https://www.musicbusinessworldwide.com/kobalt-strikes-publishing-partnership-with-indias-madverse-music/",
+        "jitter": 0.9045031351383256
+    },
+    {
+        "label": "HYBE cashes out $3.5m worth of shares, riding on B...",
+        "full_title": "HYBE cashes out $3.5m worth of shares, riding on BTS comeback",
+        "category": "Egyéb Hír",
+        "sentiment": 3.0,
+        "url": "https://www.musicbusinessworldwide.com/hybe-cashes-out-3-5m-worth-of-shares-riding-on-bts-comeback/",
+        "jitter": 0.9390065014960776
+    },
+    {
+        "label": "Derek Cournoyer appointed Strategy Lead, Music Bus...",
+        "full_title": "Derek Cournoyer appointed Strategy Lead, Music Business Affairs at ElevenLabs",
+        "category": "Egyéb Hír",
+        "sentiment": -0.0,
+        "url": "https://www.musicbusinessworldwide.com/derek-cournoyer-appointed-head-of-strategy-music-business-affairs-at-elevenlabs/",
+        "jitter": 0.45908501086983533
+    },
+    {
+        "label": "Bandcamp bans AI-generated music: ‘We want musicia...",
+        "full_title": "Bandcamp bans AI-generated music: ‘We want musicians to keep making music’",
+        "category": "Egyéb Hír",
+        "sentiment": 0.72,
+        "url": "https://www.musicbusinessworldwide.com/bandcamp-bans-ai-generated-music-we-want-musicians-to-keep-making-music/",
+        "jitter": 0.805469397659581
+    },
+    {
+        "label": "Spotify hikes price for Premium subscribers in the...",
+        "full_title": "Spotify hikes price for Premium subscribers in the US, other markets",
+        "category": "Egyéb Hír",
+        "sentiment": -1.25,
+        "url": "https://www.musicbusinessworldwide.com/spotify-hikes-price-for-premium-subscribers-in-the-us-other-markets/",
+        "jitter": 0.5552967524160539
+    }
+]

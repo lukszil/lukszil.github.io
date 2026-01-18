@@ -1,0 +1,75 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Mennyit ér 1000 lejátszás?",
+    "subtitle": "Hány dollárt kap a művész?",
+    "color": "#FCFDBF",
+    "subtitleColor": "#a395b8",
+    "anchor": "start",
+    "fontSize": 16
+  },
+  "data": {
+    "values": [
+      {"Platform": "Napster", "Payout": 0.019},
+      {"Platform": "Tidal", "Payout": 0.0128},
+      {"Platform": "Apple Music", "Payout": 0.0078},
+      {"Platform": "Deezer", "Payout": 0.0064},
+      {"Platform": "Spotify", "Payout": 0.0033},
+      {"Platform": "YouTube", "Payout": 0.0008}
+    ]
+  },
+  "transform": [ {"calculate": "datum.Payout * 1000", "as": "Per1k"} ],
+  "width": "container",
+  "height": 400,
+  "background": "transparent",
+  "encoding": {
+    "x": {
+      "field": "Platform", "type": "nominal", "sort": "-y", "title": null,
+      "axis": {
+        "labelColor": "#ffffff", "labelFontSize": 13, "labelFontWeight": "bold",
+        "domain": false, "ticks": false, "labelPadding": 10, "labelAngle": 0
+      }
+    },
+    "y": {
+      "field": "Per1k", "type": "quantitative", "title": "Bevétel ($)",
+ 
+      "scale": {"domain": [0, 24]},
+      "axis": { "grid": true, "gridColor": "#3B0F70", "gridOpacity": 0.3, "labelColor": "#a395b8", "titleColor": "#FCFDBF"}
+    }
+  },
+  "layer": [
+    {
+      "mark": {"type": "rule", "color": "#3B0F70", "size": 2, "opacity": 0.5},
+      "encoding": {
+        "y": {"field": "Per1k"}
+      }
+    },
+    {
+      "mark": {"type": "circle", "opacity": 1},
+      "encoding": {
+        "size": {
+            "field": "Per1k",
+            "type": "quantitative",
+            "scale": {"range": [150, 2000]},
+            "legend": null
+        },
+        "color": {
+            "condition": {"test": "datum.Per1k < 5", "value": "#DE4968"},
+            "value": "#FEC98D"
+        },
+        "tooltip": [ {"field": "Platform"}, {"field": "Per1k", "format": ".2f", "title": "$ / 1000 stream"} ]
+      }
+    },
+    {
+      "mark": { "type": "text", "align": "center", "dy": -40, "color": "#ffffff", "fontWeight": "bold", "fontSize": 14 },
+      "encoding": {
+        "text": {"field": "Per1k", "format": "$.2f"},
+        "color": {
+            "condition": {"test": "datum.Per1k < 5", "value": "#DE4968"},
+            "value": "#FEC98D"
+        }
+      }
+    }
+  ],
+  "config": {"view": {"stroke": null}}
+}

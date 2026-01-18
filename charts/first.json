@@ -1,0 +1,45 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": { "text": "Előfizetők (millió fő)", "color": "#FCFDBF", "anchor": "start", "fontSize": 14 },
+  "data": {
+    "values": [
+      {"a": "Spotify", "b": 239}, {"a": "Apple Music", "b": 100},
+      {"a": "Amazon Music", "b": 82}, {"a": "YouTube Music", "b": 100},
+      {"a": "Tencent Music", "b": 103}, {"a": "Deezer", "b": 9}, {"a": "Boomplay", "b": 6}
+    ]
+  },
+  "width": "container", "height": 300, "background": "transparent",
+  "encoding": {
+    "y": { 
+      "field": "a", "type": "nominal", "sort": "-x", "title": null, 
+      "axis": { "labelColor": "#ffffff", "domain": false, "ticks": false, "labelFontSize": 12, "grid": false, "labelPadding": 10 } 
+    },
+    "x": { 
+      "field": "b", "type": "quantitative", "title": null, 
+      "axis": { "grid": true, "gridColor": "#3B0F70", "gridOpacity": 0.5, "labelColor": "#a395b8" } 
+    }
+  },
+  "layer": [
+    {
+      "mark": { "type": "bar", "cornerRadiusEnd": 4, "height": {"band": 0.7} },
+      "encoding": {
+        "color": {
+          "condition": {"test": "datum.a == 'Spotify'", "value": "#FEC98D"},
+          "value": "#3B0F70"
+        },
+        "tooltip": [{ "field": "a", "title": "Platform" }, { "field": "b", "title": "Millió" }]
+      }
+    },
+    {
+      "mark": { "type": "text", "align": "left", "dx": 5, "fontWeight": "bold", "fontSize": 12 },
+      "encoding": {
+        "text": { "field": "b" },
+        "color": {
+             "condition": {"test": "datum.a == 'Spotify'", "value": "#FEC98D"},
+             "value": "#a395b8"
+        }
+      }
+    }
+  ],
+  "config": { "view": { "stroke": null } }
+}

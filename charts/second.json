@@ -1,0 +1,78 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": ["Bevételi Források"],
+    "color": "#FCFDBF",
+    "fontSize": 16,
+    "subtitle": "Piaci részesedés (%)",
+    "subtitleColor": "#a395b8",
+    "dy": -10
+  },
+  "data": {
+    "values": [
+      { "format": "Streaming", "revenue": 67.0 },
+      { "format": "Fizikai", "revenue": 17.0 },
+      { "format": "Jogdíjak", "revenue": 9.5 },
+      { "format": "Szinkron", "revenue": 3.5 },
+      { "format": "Letöltés", "revenue": 3.0 }
+    ]
+  },
+  "transform": [
+    { "calculate": "format(datum.revenue, '.1f') + '%'", "as": "percentLabel" }
+  ],
+  "width": "container", "height": 350, "background": "transparent",
+  "layer": [
+    {
+      "mark": { 
+        "type": "arc", 
+        "innerRadius": 20, 
+        "stroke": "#05040a", 
+        "strokeWidth": 2, 
+        "cornerRadius": 4,
+        "cursor": "pointer" 
+      },
+      "params": [
+        {
+          "name": "highlight",
+          "select": {"type": "point", "on": "mouseover"}
+        }
+      ],
+      "encoding": {
+        "theta": { "field": "format", "type": "nominal", "stack": true, "sort": ["Streaming", "Szinkron", "Fizikai", "Letöltés", "Jogdíjak"] },
+        "radius": { "field": "revenue", "type": "quantitative", "scale": {"type": "sqrt", "zero": true, "rangeMin": 20} },
+        "color": {
+          "field": "format", "type": "nominal", "legend": null,
+          "scale": {"range": ["#DE4968", "#FD9567", "#FEC98D", "#8C2981", "#3B0F70"]} 
+        },
+        "opacity": {
+          "condition": {"param": "highlight", "value": 1},
+          "value": 0.5
+        },
+        "tooltip": [
+          {"field": "format", "title": "Kategória"},
+          {"field": "percentLabel", "title": "Piaci rész"}
+        ]
+      }
+    },
+    {
+      "mark": { "type": "text", "radiusOffset": 25, "fontSize": 14, "fontWeight": "bold", "fill": "#ffffff", "pointerEvents": "none" },
+      "encoding": {
+        "theta": { "field": "format", "type": "nominal", "stack": true, "sort": ["Streaming", "Szinkron", "Fizikai", "Letöltés", "Jogdíjak"] },
+        "radius": { "field": "revenue", "type": "quantitative", "scale": {"type": "sqrt", "zero": true, "rangeMin": 20} },
+        "text": { 
+            "condition": {"test": "datum.revenue < 4", "value": ""}, 
+            "field": "percentLabel" 
+        }
+      }
+    },
+    {
+        "mark": { "type": "text", "radiusOffset": 45, "fontSize": 11, "fill": "#a395b8", "pointerEvents": "none" },
+        "encoding": {
+          "theta": { "field": "format", "type": "nominal", "stack": true, "sort": ["Streaming", "Szinkron", "Fizikai", "Letöltés", "Jogdíjak"] },
+          "radius": { "field": "revenue", "type": "quantitative", "scale": {"type": "sqrt", "zero": true, "rangeMin": 20} },
+          "text": { "condition": {"test": "datum.revenue < 4", "value": ""}, "field": "format" }
+        }
+    }
+  ],
+  "config": {"view": {"stroke": null}}
+}

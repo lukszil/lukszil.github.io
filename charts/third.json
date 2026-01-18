@@ -1,0 +1,25 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "params": [
+    { "name": "topN", "value": 40, "bind": { "input": "range", "min": 10, "max": 100, "step": 10, "name": "Lista hossza:" } }
+  ],
+  "data": { "url": "data/kworb_top_songs.csv", "format": { "type": "csv" } },
+  "transform": [
+    { "calculate": "toNumber(replace(datum.Streams, /,/g, ''))", "as": "streamsNum" },
+    { "calculate": "datum['Cím'] + ' — ' + datum['Előadó']", "as": "label" },
+    { "window": [ { "op": "row_number", "as": "rank" } ], "sort": [ { "field": "streamsNum", "order": "descending" } ] },
+    { "filter": "datum.rank <= topN" }
+  ],
+  "mark": { "type": "bar", "tooltip": true, "cornerRadiusTopRight": 4, "cornerRadiusBottomRight": 4 },
+  "encoding": {
+    "x": { "field": "streamsNum", "type": "quantitative", "title": "Streamek", "axis": { "format": "s", "labelColor": "#e5e7eb", "titleColor": "#9ca3af" } },
+    "y": { "field": "label", "type": "nominal", "sort": "-x", "title": null, "axis": { "labelColor": "#e5e7eb" } },
+    "color": { "field": "streamsNum", "scale": { "scheme": "magma" }, "legend": null },
+    "tooltip": [
+      { "field": "Cím", "title": "Dal" }, { "field": "Előadó", "title": "Előadó" },
+      { "field": "streamsNum", "title": "Streamek", "format": "," }
+    ]
+  },
+  "width": "container", "height": { "step": 18 }, "background": "transparent",
+  "config": { "view": { "stroke": null } }
+}
