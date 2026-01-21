@@ -158,6 +158,35 @@
             border-bottom: 1px solid var(--border) !important;
             width: 100% !important;
         }
+
+    .legend-container {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-bottom: 20px; /* Hely a diagram felett */
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        background: rgba(0,0,0,0.2); /* Pici sötét háttér */
+        padding: 10px;
+        border-radius: 20px;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid var(--border);
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 5px rgba(255,255,255,0.2);
+    }
+       
     footer { 
         text-align: center; padding: 50px; color: var(--text-muted); 
         border-top: 1px solid var(--border); margin-top: 50px; font-size: 0.9rem; 
@@ -190,7 +219,25 @@
 
         <section>
         <h2>A figyelmünk és a dalhosszak változása</h2>
-        
+
+            <section>
+            <h2>4. A figyelmünk változása és a dalhosszak</h2>
+            
+            <div class="legend-container">
+                <div class="legend-item">
+                    <span class="dot" style="background-color: #a395b8;"></span> 
+                    <span>Explicit</span>
+                </div>
+                <div class="legend-item">
+                    <span class="dot" style="background-color: #ffffff;"></span> 
+                    <span>Tiszta</span>
+                </div>
+                <div class="legend-item">
+                    <span class="dot" style="background-color: #60a5fa;"></span> 
+                    <span>Cenzúrázott</span>
+                </div>
+            </div>
+                  
             <div class="comparison-wrapper">
                 <div class="artist-panel">
                     <div class="search-box-mini">
