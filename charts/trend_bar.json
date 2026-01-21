@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "Sentiment Analysis",
+  "description": "Iparági Pulzus (Hangulatelemzés)",
   "data": { "url": "data/scraped_trends.json" },
   "width": "container", "height": 400, "background": "transparent",
   "transform": [
@@ -12,7 +12,13 @@
     {
       "mark": {"type": "rule", "size": 2},
       "encoding": {
-        "x": { "field": "sentiment", "type": "quantitative", "title": "Hangulat", "scale": {"domain": [-10, 10]}, "axis": {"grid": false, "labelColor": "#a395b8", "titleColor": "#FCFDBF"} },
+        "x": { 
+            "field": "sentiment", 
+            "type": "quantitative", 
+            "title": "Hangulat", 
+            "scale": {"domain": [-10, 10]}, 
+            "axis": {"grid": false, "labelColor": "#a395b8", "titleColor": "#FCFDBF"} 
+        },
         "y": { "field": "label", "type": "nominal", "sort": {"field": "sentiment", "order": "ascending"}, "axis": null },
         "color": {
           "field": "direction",
@@ -27,7 +33,11 @@
         "x": {"field": "sentiment", "type": "quantitative"},
         "y": { "field": "label", "type": "nominal", "sort": {"field": "sentiment", "order": "ascending"} },
         "color": { "field": "direction", "type": "nominal" },
-        "tooltip": [{"field": "full_title"}, {"field": "sentiment"}]
+        "tooltip": [
+            {"field": "full_title", "title": "Hír címe"},
+            {"field": "sentiment", "title": "Hangulat index"},
+            {"field": "category", "title": "Kategória"}
+        ]
       }
     },
     {
