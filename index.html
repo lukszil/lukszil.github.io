@@ -219,11 +219,6 @@
 
         <section>
         <h2>A figyelmünk és a dalhosszak változása</h2>
-            <div class="legend-container">
-                <div class="legend-item">
-                    <span class="dot" style="background-color: #8C2981;"></span> 
-                    <span>Explicit</span>
-                </div>
                 <div class="legend-item">
                     <span class="dot" style="background-color: #ffffff;"></span> 
                     <span>Cenzúrázott</span>
@@ -376,14 +371,20 @@
      // iTunes Diagram Specifikáció
         // iTunes Diagram Specifikáció
        // iTunes Diagram Specifikáció
+        // iTunes Diagram Specifikáció
         const itunesSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "data": { "name": "myData" }, // Ez várja a JavaScriptből az adatot
+            "data": { "name": "myData" },
             "width": "container",
             "height": 280,
+            
+            // ÚJ RÉSZ: Ez a szűrő kidobja az explicit dalokat az adatok közül
+            "transform": [
+                {"filter": "datum.explicitness != 'explicit'"} 
+            ],
+
             "layer": [
                 {
-                    // 1. RÉTEG: PÖTTYÖK
                     "mark": {"type": "circle", "opacity": 1, "size": 70},
                     "encoding": {
                         "x": {
@@ -398,13 +399,12 @@
                             "axis": {"grid": true}
                         },
                         "color": {
-                            // FONTOS: Itt 'explicitness' a mező neve (nem trackExplicitness)
                             "field": "explicitness", "type": "nominal",
-                            
                             "scale": {
-                                "domain": ["explicit", "cleaned", "notExplicit"], 
-                                // FONTOS: Itt vannak a jó színek (Lila, Fehér, Kék)
-                                "range": ["#8C2981", "#ffffff", "#60a5fa"] 
+                                // JAVÍTVA: Csak 2 kategória maradt
+                                "domain": ["cleaned", "notExplicit"], 
+                                // JAVÍTVA: Csak 2 szín maradt (Fehér, Kék)
+                                "range": ["#ffffff", "#60a5fa"] 
                             },
                             "legend": null 
                         },
@@ -416,7 +416,6 @@
                     }
                 },
                 {
-                    // 2. RÉTEG: ÁTLAGVONAL
                     "mark": {"type": "line", "point": false, "color": "#f0f6fc", "strokeWidth": 2, "strokeDash": [4,4]},
                     "encoding": {
                         "x": {"field": "year", "type": "ordinal"},
