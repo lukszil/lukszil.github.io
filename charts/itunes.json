@@ -21,7 +21,7 @@
     "color": {
       "field": "trackExplicitness", "type": "nominal", 
       "title": "Szöveg",
-      "scale": {"domain": ["explicit", "cleaned", "notExplicit"], "range": ["#ff6b6b", "#4ade80", "#60a5fa"]},
+      "scale": {"domain": ["explicit", "cleaned", "notExplicit"], "range": ["#3B0F70", "#ffffff", "#60a5fa"]},
       "legend": {"labelColor": "#9ca3af", "titleColor": "#fff"}
     },
     "tooltip": [
@@ -31,4 +31,5 @@
     ]
   },
   "config": {"view": {"stroke": null}, "background": "transparent"}
+
 }
