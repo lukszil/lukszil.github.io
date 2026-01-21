@@ -374,15 +374,17 @@
 
         // iTunes Diagram Specifikáció
      // iTunes Diagram Specifikáció
+        // iTunes Diagram Specifikáció
+       // iTunes Diagram Specifikáció
         const itunesSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "data": { "name": "myData" },
+            "data": { "name": "myData" }, // Ez várja a JavaScriptből az adatot
             "width": "container",
             "height": 280,
             "layer": [
                 {
                     // 1. RÉTEG: PÖTTYÖK
-                    "mark": {"type": "circle", "opacity": 0.7, "size": 70},
+                    "mark": {"type": "circle", "opacity": 1, "size": 70},
                     "encoding": {
                         "x": {
                             "field": "year", "type": "ordinal", 
@@ -392,17 +394,16 @@
                         "y": {
                             "field": "minutes", "type": "quantitative",
                             "title": "Perc",
-                            // Rögzített skála 0-8 perc között
                             "scale": {"domain": [0, 8], "clamp": true}, 
                             "axis": {"grid": true}
                         },
                         "color": {
-                            // FONTOS JAVÍTÁS: A mező neve 'explicitness' (nem trackExplicitness)
+                            // FONTOS: Itt 'explicitness' a mező neve (nem trackExplicitness)
                             "field": "explicitness", "type": "nominal",
                             
                             "scale": {
                                 "domain": ["explicit", "cleaned", "notExplicit"], 
-                                // FONTOS JAVÍTÁS: Világosabb lila (#8C2981), Fehér, Kék
+                                // FONTOS: Itt vannak a jó színek (Lila, Fehér, Kék)
                                 "range": ["#8C2981", "#ffffff", "#60a5fa"] 
                             },
                             "legend": null 
@@ -415,7 +416,7 @@
                     }
                 },
                 {
-                    // 2. RÉTEG: ÁTLAGVONAL (Trend)
+                    // 2. RÉTEG: ÁTLAGVONAL
                     "mark": {"type": "line", "point": false, "color": "#f0f6fc", "strokeWidth": 2, "strokeDash": [4,4]},
                     "encoding": {
                         "x": {"field": "year", "type": "ordinal"},
