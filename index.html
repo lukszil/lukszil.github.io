@@ -373,6 +373,7 @@
         }
 
         // iTunes Diagram Specifikáció
+     // iTunes Diagram Specifikáció
         const itunesSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": { "name": "myData" },
@@ -380,7 +381,8 @@
             "height": 280,
             "layer": [
                 {
-                    "mark": {"type": "circle", "opacity": 0.6, "size": 60},
+                    // 1. RÉTEG: PÖTTYÖK
+                    "mark": {"type": "circle", "opacity": 0.7, "size": 70},
                     "encoding": {
                         "x": {
                             "field": "year", "type": "ordinal", 
@@ -390,15 +392,17 @@
                         "y": {
                             "field": "minutes", "type": "quantitative",
                             "title": "Perc",
-                            // FONTOS: Rögzített skála a pontos összehasonlításhoz
+                            // Rögzített skála 0-8 perc között
                             "scale": {"domain": [0, 8], "clamp": true}, 
                             "axis": {"grid": true}
                         },
                         "color": {
+                            // FONTOS JAVÍTÁS: A mező neve 'explicitness' (nem trackExplicitness)
                             "field": "explicitness", "type": "nominal",
-                            // Itt is a paletta színeit használjuk
+                            
                             "scale": {
                                 "domain": ["explicit", "cleaned", "notExplicit"], 
+                                // FONTOS JAVÍTÁS: Világosabb lila (#8C2981), Fehér, Kék
                                 "range": ["#8C2981", "#ffffff", "#60a5fa"] 
                             },
                             "legend": null 
@@ -411,7 +415,7 @@
                     }
                 },
                 {
-                    // Átlagvonal
+                    // 2. RÉTEG: ÁTLAGVONAL (Trend)
                     "mark": {"type": "line", "point": false, "color": "#f0f6fc", "strokeWidth": 2, "strokeDash": [4,4]},
                     "encoding": {
                         "x": {"field": "year", "type": "ordinal"},
@@ -421,7 +425,6 @@
             ],
             "config": {"view": {"stroke": null}, "background": "transparent"}
         };
-
         // Adatbetöltő függvény
         function loadSide(side) {
             const inputId = side === 'left' ? 'artistInputLeft' : 'artistInputRight';
